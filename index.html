@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b16">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>AI 百變換裝工作室 V1.8</title>
+<title>AI 百變換裝工作室 V1.9</title>
 <style>
 :root{--bg:#090b16;--panel:#12182a;--panel2:#192139;--line:#303b5c;--text:#f5f3ff;--muted:#aab3ce;--pink:#ef67d7;--purple:#9b80ff;--cyan:#50d9e7;--green:#6de0b2}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#30204e 0,transparent 38%),radial-gradient(ellipse at 0% 45%,#102e42 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Noto Sans TC",sans-serif}
@@ -20,9 +20,9 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 </style></head>
 <body class="auth-locked">
 <div id="authGate" class="auth-gate"><div class="auth-card"><div class="logo">✦</div><div class="eyebrow">PRIVATE AI TRANSFORMATION STUDIO</div><h1>私人換裝工作室</h1><p>此工作室僅開放授權帳號使用。輸入專屬 Email，我們會寄送一次性登入連結。</p><div class="auth-email">royalsdada@gmail.com</div><button id="authSend" class="btn">寄送安全登入連結</button><div id="authMessage" class="auth-message" aria-live="polite"></div><p class="small">請在同一個瀏覽器開啟收到的登入連結。請勿轉寄給他人。</p></div></div>
-<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.8</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
+<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.9</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
 <main>
-<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V1.8 · ADULT FASHION MODE</span></div>
+<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V1.9 · QUALITY & BUDGET GUARD</span></div>
 <div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="poses">♙ 姿勢資料庫</button><button class="tab" data-tab="library">♡ 我的收藏與紀錄</button></div>
 <section id="prompt" class="layout">
 <div class="panel">
@@ -54,7 +54,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 </div></section>
 <section id="tryon" class="layout hide">
 <div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><div class="section"><label>換裝風格模式</label><div class="choices" id="modeChoices"><button type="button" class="chip selected" data-mode="standard">✨ 一般時尚</button><button type="button" class="chip" data-mode="adult">🔞 成人性感寫真</button></div><p class="small" id="modeHint">一般模式：日常穿搭、角色扮演、時尚與奇幻造型。</p><label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="adultConfirm" type="checkbox" style="width:auto"> 我確認人物皆為成年人，且只製作非露骨的成人時尚影像。</label><p class="small">成人模式僅支援成熟性感時尚、泳裝、內衣型錄與人體藝術氛圍；不支援露骨裸露或性行為內容。</p></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
-<div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：後端已部署，等待 API 金鑰</strong><br>OpenAI 圖像編輯已接上安全後端。設定 API 金鑰後即可開始實際生成；金鑰不會放在網站前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button><button class="btn cyan" id="generateImage">✨ 確認生成圖片</button></div><div class="status" id="tryStatus" aria-live="polite"></div><p class="small">使用 OpenAI GPT Image 2。生成費用依 API 帳戶計價。</p></div></div>
+<div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：後端已部署，等待 API 金鑰</strong><br>OpenAI 圖像編輯已接上安全後端。設定 API 金鑰後即可開始實際生成；金鑰不會放在網站前端。</div><div class="field"><label>生成品質</label><select id="generationQuality"><option value="high" selected>High 高畫質（推薦）</option><option value="medium">Medium 測試／省成本</option></select><p class="small">每次生成先預留 US$0.30（約 NT$10），每月最多 10 次，累計預留上限 US$3。這是保守預算保護額，不是 OpenAI 精準報價或最終帳單。</p></div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button><button class="btn cyan" id="generateImage">✨ 確認生成圖片</button></div><div class="status" id="tryStatus" aria-live="polite"></div><p class="small">使用 OpenAI GPT Image 2。生成費用依 API 帳戶計價。</p></div></div>
 </section>
 
 <section id="poses" class="hide">
@@ -72,7 +72,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="panel"><div class="tag">MY STYLE VAULT</div><h2>收藏的造型設定</h2><p class="small">收藏資料只保存在目前瀏覽器。清除瀏覽器網站資料可能會刪除收藏。</p><div id="favorites" class="history"></div></div>
 <div class="panel"><div class="tag">RECENT PROMPTS</div><h2>最近使用紀錄</h2><div id="history" class="history"></div><div class="actions"><button class="btn ghost" id="clearHistory">清除使用紀錄</button></div></div>
 </section>
-<div class="footer">AI 百變換裝工作室 V1.8 · 私人換裝與成人時尚模式</div>
+<div class="footer">AI 百變換裝工作室 V1.9 · 品質選擇與月度預算保護</div>
 </main>
 <script>
 const data={categories:["職業制服","時尚造型","動漫 COSPLAY","奇幻角色","電影與遊戲","古風造型","舞台表演","自訂角色"],styles:["韓系甜美","日系學院","空姐制服","優雅晚禮服","街頭潮流","奇幻女騎士","魔法公主","未來科技","古風仙俠","運動休閒","復古名媛","黑暗哥德","偶像打歌服","海軍風制服","都會商務","婚紗造型","夏日度假","賽博龐克","蒸氣龐克","精靈森林","皇家禮服","機能戰術","賽車女郎","芭蕾舞者","自訂造型"],locks:["保留臉部五官","保留髮型與髮色","保留自然膚色","保留原始身形比例","自然手部與肢體","不改變人物年齡感"]};
@@ -170,17 +170,16 @@ async function generateOutfitImage(){
  if(file.size>12*1024*1024){status.textContent="人物照片請控制在 12 MB 以內。";return}
  const prompt=$("tryPrompt").value.trim()||$("tryDescription").value.trim();
  if(!prompt){status.textContent="請先產生或輸入換裝描述。";return}
+ const quality=$("generationQuality").value;
  const client=window.outfitSupabase;
  if(!client){status.textContent="登入服務尚未準備好，請重新整理。";return}
  const {data:{session}}=await client.auth.getSession();
  if(!session){status.textContent="登入逾時，請重新登入。";return}
- button.disabled=true;button.textContent="⏳ AI 正在設計新造型…";status.textContent="正在安全傳送照片並生成，請稍候。";
+ button.disabled=true;button.textContent="⏳ AI 正在設計新造型…";status.textContent="正在檢查本月預算並安全傳送照片…";
  try{
-  const form=new FormData();form.append("image",file,file.name);form.append("prompt",prompt);
+  const form=new FormData();form.append("image",file,file.name);form.append("prompt",prompt);form.append("quality",quality);
   const response=await fetch("https://fmcpklidjdrfwindkqjx.supabase.co/functions/v1/generate-outfit",{
-   method:"POST",
-   headers:{Authorization:"Bearer "+session.access_token,apikey:"sb_publishable_gPPvnEb1Qe-A70GckO0waw_IaPRPL4m"},
-   body:form
+   method:"POST",headers:{Authorization:"Bearer "+session.access_token,apikey:"sb_publishable_gPPvnEb1Qe-A70GckO0waw_IaPRPL4m"},body:form
   });
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"生成失敗，請稍後重試。");
@@ -189,7 +188,8 @@ async function generateOutfitImage(){
   const img=document.createElement("img");img.src=imageUrl;img.alt="AI 換裝生成結果";img.style.maxWidth="100%";img.style.maxHeight="520px";img.style.objectFit="contain";img.style.borderRadius="12px";
   $("resultArea").appendChild(img);
   const download=document.createElement("a");download.href=imageUrl;download.download="AI百變換裝作品.png";download.className="btn";download.textContent="下載生成圖片";download.style.marginTop="12px";$("resultArea").appendChild(download);
-  status.textContent="✓ 生成完成！目前結果顯示於右側，可下載保存。";
+  const budget=result.budget||{};
+  status.textContent="✓ 生成完成！本月已使用 "+(budget.monthly_count||"?")+"/"+(budget.monthly_limit||10)+" 次預算額度。每次預留 US$0.30，實際帳單依 API 用量為準。";
  }catch(error){status.textContent="生成未完成："+(error?.message||"未知錯誤");}
  finally{button.disabled=false;button.textContent="✨ 確認生成圖片";}
 }
