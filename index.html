@@ -54,7 +54,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 </div></section>
 <section id="tryon" class="layout hide">
 <div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
-<div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：等待串接</strong><br>V1.5 已完成換裝規格與提示詞設計。真正的網頁內生圖需要安全後端與圖像模型 API，金鑰不可放在前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button></div><div class="status" id="tryStatus"></div></div></div>
+<div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：後端已部署，等待 API 金鑰</strong><br>OpenAI 圖像編輯已接上安全後端。設定 API 金鑰後即可開始實際生成；金鑰不會放在網站前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button><button class="btn cyan" id="generateImage">✨ 確認生成圖片</button></div><div class="status" id="tryStatus" aria-live="polite"></div><p class="small">使用 OpenAI GPT Image 2。生成費用依 API 帳戶計價。</p></div></div>
 </section>
 
 <section id="poses" class="hide">
@@ -160,6 +160,39 @@ function renderPoseLibrary(){
 }
 $("applyPose").onclick=()=>{const p=poseLibrary.find(x=>x.id===activePoseId);let option=[...$("pose").options].find(o=>o.value===p.prompt);if(!option){option=document.createElement("option");option.value=p.prompt;option.textContent=p.name;$("pose").appendChild(option)}$("pose").value=p.prompt;build();$("poseStatus").textContent="✓ 已套用「"+p.name+"」，提示詞已同步更新。";switchTab("prompt")};
 $("randomPose").onclick=()=>{const list=poseLibrary.filter(p=>activePoseFilter==="全部"||p.cat===activePoseFilter);const p=list[Math.floor(Math.random()*list.length)];activePoseId=p.id;renderPoseLibrary();$("poseStatus").textContent="已隨機選取："+p.name};
+
+
+async function generateOutfitImage(){
+ const status=$("tryStatus"),button=$("generateImage"),file=$("tryPhoto").files[0];
+ if(!file){status.textContent="請先選擇要換裝的人物照片。";return}
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)){status.textContent="僅支援 JPG、PNG、WebP。";return}
+ if(file.size>12*1024*1024){status.textContent="人物照片請控制在 12 MB 以內。";return}
+ const prompt=$("tryPrompt").value.trim()||$("tryDescription").value.trim();
+ if(!prompt){status.textContent="請先產生或輸入換裝描述。";return}
+ const client=window.outfitSupabase;
+ if(!client){status.textContent="登入服務尚未準備好，請重新整理。";return}
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){status.textContent="登入逾時，請重新登入。";return}
+ button.disabled=true;button.textContent="⏳ AI 正在設計新造型…";status.textContent="正在安全傳送照片並生成，請稍候。";
+ try{
+  const form=new FormData();form.append("image",file,file.name);form.append("prompt",prompt);
+  const response=await fetch("https://fmcpklidjdrfwindkqjx.supabase.co/functions/v1/generate-outfit",{
+   method:"POST",
+   headers:{Authorization:"Bearer "+session.access_token,apikey:"sb_publishable_gPPvnEb1Qe-A70GckO0waw_IaPRPL4m"},
+   body:form
+  });
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"生成失敗，請稍後重試。");
+  const imageUrl="data:"+(result.mime_type||"image/png")+";base64,"+result.image;
+  $("resultArea").innerHTML="";
+  const img=document.createElement("img");img.src=imageUrl;img.alt="AI 換裝生成結果";img.style.maxWidth="100%";img.style.maxHeight="520px";img.style.objectFit="contain";img.style.borderRadius="12px";
+  $("resultArea").appendChild(img);
+  const download=document.createElement("a");download.href=imageUrl;download.download="AI百變換裝作品.png";download.className="btn";download.textContent="下載生成圖片";download.style.marginTop="12px";$("resultArea").appendChild(download);
+  status.textContent="✓ 生成完成！目前結果顯示於右側，可下載保存。";
+ }catch(error){status.textContent="生成未完成："+(error?.message||"未知錯誤");}
+ finally{button.disabled=false;button.textContent="✨ 確認生成圖片";}
+}
+$("generateImage").addEventListener("click",generateOutfitImage);
 
 function switchTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["prompt","tryon","poses","library"].forEach(x=>$(x).classList.toggle("hide",x!==id));if(id==="library")renderList();if(id==="poses")renderPoseLibrary()}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
