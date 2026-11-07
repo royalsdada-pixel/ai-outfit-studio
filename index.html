@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b16">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <title>AI 百變換裝工作室 V1.5</title>
 <style>
 :root{--bg:#090b16;--panel:#12182a;--panel2:#192139;--line:#303b5c;--text:#f5f3ff;--muted:#aab3ce;--pink:#ef67d7;--purple:#9b80ff;--cyan:#50d9e7;--green:#6de0b2}
@@ -14,8 +15,11 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 .field{margin:10px 0}select,input[type=text],textarea{width:100%;background:#0a0e1b;border:1px solid #3a4564;border-radius:10px;color:white;padding:10px;font:inherit}select option{background:#101629}textarea{min-height:220px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.upload{border:1px dashed #69749b;border-radius:14px;padding:14px;text-align:center;background:#0b1020}.upload input{max-width:100%;margin:8px}.preview{width:100%;max-height:290px;object-fit:contain;border-radius:12px;margin-top:10px;background:#05070d;display:none}.small{color:var(--muted);font-size:11px}.btn{border:0;border-radius:10px;padding:10px 14px;color:white;font-weight:650;background:linear-gradient(100deg,#7656ef,#d54dbb)}.btn.secondary{background:#242d46;border:1px solid #465473}.btn.cyan{background:linear-gradient(100deg,#147f9b,#25b8bd)}.btn.ghost{background:transparent;border:1px solid #596482;color:#dfe5fa}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.notice{background:#151e31;border:1px solid #3b5673;border-radius:12px;padding:11px;color:#c5d9eb;font-size:12px;margin-top:12px}.notice strong{color:#7de8f1}.previewWrap{min-height:145px;display:grid;place-items:center;border:1px dashed #414b69;border-radius:14px;color:#7884a3;text-align:center;padding:15px}.hide{display:none!important}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:6px}.history{display:grid;gap:7px;margin-top:9px}.history button{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{color:#737f9e;font-size:11px;text-align:center;margin:25px 0}.tag{font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:8px}
 @media(max-width:820px){.layout{grid-template-columns:1fr}.hero{display:block}.version{display:inline-block;margin-top:9px}header{padding:15px 18px}.grid2{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.grid2{grid-template-columns:1fr}.panel{padding:14px}.tab{flex:1}}
+
+.auth-locked>header,.auth-locked>main{display:none!important}.auth-gate{display:none;min-height:100vh;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#30204e 0,transparent 55%),var(--bg)}.auth-locked .auth-gate{display:grid}.auth-card{width:min(100%,430px);padding:30px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#151c30,#0f1423);box-shadow:0 20px 70px #0008;text-align:center}.auth-card .logo{margin:0 auto 16px}.auth-card h1{margin:10px 0}.auth-card p{color:var(--muted)}.auth-email{padding:12px;border:1px solid #465473;border-radius:10px;background:#0a0e1b;margin:18px 0}.auth-card .btn{width:100%}.auth-message{min-height:24px;margin-top:12px;color:var(--green);font-size:13px}
 </style></head>
-<body>
+<body class="auth-locked">
+<div id="authGate" class="auth-gate"><div class="auth-card"><div class="logo">✦</div><div class="eyebrow">PRIVATE AI TRANSFORMATION STUDIO</div><h1>私人換裝工作室</h1><p>此工作室僅開放授權帳號使用。輸入專屬 Email，我們會寄送一次性登入連結。</p><div class="auth-email">royalsdada@gmail.com</div><button id="authSend" class="btn">寄送安全登入連結</button><div id="authMessage" class="auth-message" aria-live="polite"></div><p class="small">請在同一個瀏覽器開啟收到的登入連結。請勿轉寄給他人。</p></div></div>
 <header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.5</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
 <main>
 <div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>造型資料庫升級版。更細緻控制服裝剪裁、配件、鞋款與拍攝場景，並可收藏喜愛設定、回看最近使用的提示詞。</p></div><span class="version">✦ V1.5 · STYLE LIBRARY</span></div>
@@ -84,4 +88,51 @@ function switchTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 $("clearHistory").onclick=()=>{if(confirm("確定清除最近使用紀錄？")){putStore("outfitHistory",[]);renderList()}};
 build();renderList();
-</script></body></html>
+</script>
+<script>
+(() => {
+  const OWNER = "royalsdada@gmail.com";
+  const SUPABASE_URL = "https://fmcpklidjdrfwindkqjx.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gPPvnEb1Qe-A70GckO0waw_IaPRPL4m";
+  const gate = document.getElementById("authGate");
+  const send = document.getElementById("authSend");
+  const message = document.getElementById("authMessage");
+  const lock = () => document.body.classList.add("auth-locked");
+  const unlock = () => document.body.classList.remove("auth-locked");
+  if (!window.supabase?.createClient) {
+    message.textContent = "登入元件載入失敗，請重新整理頁面。";
+    return;
+  }
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  async function applySession(session) {
+    const email = session?.user?.email?.toLowerCase();
+    if (email === OWNER) {
+      unlock();
+      gate.setAttribute("aria-hidden", "true");
+    } else {
+      lock();
+      gate.removeAttribute("aria-hidden");
+      if (session) await client.auth.signOut();
+    }
+  }
+  client.auth.getSession().then(({data}) => applySession(data.session));
+  client.auth.onAuthStateChange((_event, session) => { applySession(session); });
+  send.addEventListener("click", async () => {
+    send.disabled = true;
+    message.textContent = "正在寄送登入連結…";
+    const {error} = await client.auth.signInWithOtp({
+      email: OWNER,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: window.location.origin + window.location.pathname
+      }
+    });
+    send.disabled = false;
+    message.textContent = error
+      ? "寄送失敗：" + error.message
+      : "登入連結已寄出！請檢查信箱與垃圾郵件匣。";
+  });
+  window.outfitSupabase = client;
+})();
+</script>
+</body></html>
