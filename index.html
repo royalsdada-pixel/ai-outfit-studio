@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 百變換裝工作室 V1.0</title>
+<style>
+:root{--bg:#080a13;--panel:#111526;--panel2:#171d32;--line:#303956;--text:#f4f3ff;--muted:#a8afc9;--pink:#f05bd5;--purple:#9b78ff;--cyan:#49d9e9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#29194a 0,transparent 38%),radial-gradient(ellipse at 0% 45%,#102c42 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Noto Sans TC",sans-serif}
+header{padding:28px max(20px,calc((100% - 1180px)/2));border-bottom:1px solid #303956;background:#080a13d9;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;font-size:23px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--cyan)}h1{font-size:clamp(23px,4vw,34px);margin:2px 0}.sub{color:var(--muted);font-size:13px}
+main{max-width:1180px;margin:24px auto;padding:0 18px 60px}.hero{display:flex;justify-content:space-between;gap:18px;align-items:end;margin:24px 0}.hero p{color:var(--muted);max-width:680px;margin:6px 0}.pill{border:1px solid #7654b7;color:#e2c7ff;border-radius:999px;padding:6px 12px;font-size:12px;white-space:nowrap}
+.tabs{display:flex;gap:8px;margin:18px 0}.tab{border:1px solid var(--line);background:#111526;color:var(--muted);padding:11px 16px;border-radius:12px;cursor:pointer}.tab.active{background:linear-gradient(100deg,#38205f,#241a46);border-color:var(--pink);color:white;box-shadow:0 0 18px #b04bca33}
+.layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:18px}.panel{background:linear-gradient(145deg,#141a2d,#0e1220);border:1px solid var(--line);border-radius:18px;padding:19px;box-shadow:0 12px 40px #0005}.panel h2{font-size:17px;margin:0 0 14px}.section{margin:18px 0}.section label,.field label{display:block;font-size:13px;color:#d9d9ee;margin-bottom:8px}.choices{display:flex;flex-wrap:wrap;gap:8px}.choice{border:1px solid #39415d;background:#0d1221;color:#d9def2;padding:8px 12px;border-radius:999px;cursor:pointer;font-size:13px}.choice.selected{border-color:var(--pink);background:#51234e;color:white;box-shadow:0 0 12px #e75cc733}
+.field{margin:12px 0}select,input[type=text],textarea{width:100%;background:#0a0e1a;border:1px solid #3a4564;border-radius:10px;color:white;padding:11px;font:inherit}textarea{min-height:225px;resize:vertical}.upload{border:1px dashed #69749b;border-radius:14px;padding:16px;text-align:center;background:#0b1020}.upload input{max-width:100%;margin:8px}.preview{width:100%;max-height:310px;object-fit:contain;border-radius:12px;margin-top:10px;background:#05070d;display:none}.small{color:var(--muted);font-size:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:11px;padding:11px 15px;color:white;font-weight:650;cursor:pointer;background:linear-gradient(100deg,#7656ef,#d54dbb)}.btn.secondary{background:#242c43;border:1px solid #46516f}.btn.cyan{background:linear-gradient(100deg,#147f9b,#25b8bd)}.btn:active{transform:translateY(1px)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.output{font-size:13px;color:#c9d0e8}.notice{background:#151e31;border:1px solid #3b5673;border-radius:12px;padding:12px;color:#c5d9eb;font-size:12px;margin-top:14px}.notice strong{color:#7de8f1}.previewWrap{min-height:150px;display:grid;place-items:center;border:1px dashed #414b69;border-radius:14px;color:#7884a3;text-align:center;padding:15px}.hide{display:none!important}.footer{color:#737f9e;font-size:11px;text-align:center;margin:26px 0}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.hero{display:block}.pill{display:inline-block;margin-top:10px}header{padding:18px}}
+</style></head>
+<body>
+<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.0</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · 創作你的下一種模樣</div></div></div></header>
+<main>
+<div class="hero"><div><h2 style="font-size:22px;margin:0">一張照片，開啟百變造型旅程</h2><p>先用提示詞編輯器精準設計造型，再把完整指令交給支援圖片編輯的 AI。此版本可在瀏覽器本機操作，不會自動上傳照片。</p></div><span class="pill">✦ 雙工作區原型</span></div>
+<div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button></div>
+<section id="prompt" class="layout">
+<div class="panel">
+<h2>01 / 選擇換裝角色</h2>
+<div class="section"><label>角色分類</label><div class="choices" id="categories"></div></div>
+<div class="section"><label>造型風格</label><div class="choices" id="styles"></div></div>
+<div class="section"><label>服裝細節</label><div class="grid2">
+<div class="field"><label>服裝主色</label><select id="color"><option>黑色</option><option>白色</option><option>酒紅色</option><option>海軍藍</option><option>粉色</option><option>銀白色</option><option>金色</option><option>依 AI 自行搭配</option></select></div>
+<div class="field"><label>服裝材質</label><select id="fabric"><option>高級霧面布料</option><option>絲緞</option><option>蕾絲與薄紗</option><option>皮革</option><option>金屬與皮革戰甲</option><option>針織</option><option>依造型自然搭配</option></select></div>
+<div class="field"><label>姿勢</label><select id="pose"><option>自然站姿，身體微側</option><option>自信走路，捕捉動態瞬間</option><option>優雅坐姿</option><option>雙手自然垂放</option><option>一手叉腰的時尚姿勢</option><option>依場景自然安排</option></select></div>
+<div class="field"><label>鏡頭構圖</label><select id="framing"><option>全身直幅人像</option><option>七分身時尚攝影</option><option>半身肖像</option><option>電影感低角度全身照</option><option>自然視線高度，中景</option></select></div>
+<div class="field"><label>場景</label><select id="scene"><option>明亮高級攝影棚</option><option>韓系都會街景</option><option>日式校園庭院</option><option>豪華飯店大廳</option><option>奇幻城堡與星光</option><option>未來科技城市</option><option>海邊黃昏</option><option>依服裝風格智慧搭配</option></select></div>
+<div class="field"><label>影像風格</label><select id="quality"><option>超寫實時尚攝影，細節清晰</option><option>電影劇照風格，戲劇光影</option><option>自然光人像攝影，膚質真實</option><option>高質感奇幻概念藝術</option><option>日系雜誌寫真</option></select></div>
+</div></div>
+<div class="section"><label>人物保留設定</label><div class="choices" id="locks"></div><p class="small">提醒：這些是提示詞要求，實際保留程度仍取決於使用的圖像模型。</p></div>
+<div class="section"><label>自訂補充（選填）</label><input id="extra" type="text" placeholder="例如：短版外套、銀色耳環、背景有柔和散景…"></div>
+</div>
+<div class="panel">
+<h2>02 / 上傳參考照片</h2><div class="upload"><div>📷 選擇人物照片</div><input id="photo" type="file" accept="image/*"><div class="small">支援 JPG、PNG、WebP。照片只在此頁面預覽，不會傳送到伺服器。</div><img id="photoPreview" class="preview" alt="上傳照片預覽"></div>
+<div class="section"><h2>03 / 完整提示詞</h2><div class="small">選項變更時自動更新，可自行修改文字。</div><textarea id="promptText"></textarea><div class="actions"><button class="btn" id="copy">複製完整指令</button><button class="btn secondary" id="regen">重新組合</button><button class="btn secondary" id="save">下載指令 .txt</button></div><div id="feedback" class="small" aria-live="polite"></div></div>
+<div class="notice"><strong>人物一致性小技巧</strong><br>使用清晰、光線均勻、臉部未被遮擋的原圖；提示詞會要求保留同一人物的臉部特徵、髮型、膚色與自然身形，但無法保證像素級一致。</div>
+</div></section>
+<section id="tryon" class="layout hide">
+<div class="panel"><h2>01 / 準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"></div>
+<div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div>
+<button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
+<div class="panel"><h2>02 / AI 換裝流程</h2><div class="previewWrap">生成結果預覽區<br><span class="small">接上圖像生成 API 後，這裡會顯示成品</span></div><div class="notice"><strong>目前狀態：尚未連接圖像生成服務</strong><br>這個原型已完成照片選取預覽與換裝指令產生。要在網頁內直接生成換裝照片，下一步需選定圖像模型服務並建立安全的後端 API。API 金鑰不可直接寫在前端網頁。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button></div></div></div>
+</section>
+<div class="footer">AI 百變換裝工作室 V1.0 · 本機互動原型 · 照片不會自動上傳</div>
+</main>
+<script>
+const data={
+categories:["職業制服","時尚造型","動漫 COSPLAY","奇幻角色","電影與遊戲","自訂角色"],
+styles:["韓系甜美","日系學院","空姐制服","優雅晚禮服","街頭潮流","奇幻女騎士","魔法公主","未來科技","古風仙俠","自訂造型"],
+locks:["保留臉部五官","保留髮型與髮色","保留自然膚色","保留原始身形比例","自然手部與肢體","不改變人物年齡感"]
+};
+let selected={category:"時尚造型",style:"韓系甜美"};
+function makeChoices(id,items,initial){const root=document.getElementById(id);items.forEach(v=>{const b=document.createElement("button");b.className="choice"+(initial.includes(v)?" selected":"");b.textContent=v;b.type="button";b.onclick=()=>{if(id==="locks"){b.classList.toggle("selected")}else{root.querySelectorAll(".choice").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");selected[id==="categories"?"category":"style"]=v;build()}};root.appendChild(b)})}
+makeChoices("categories",data.categories,["時尚造型"]);makeChoices("styles",data.styles,["韓系甜美"]);makeChoices("locks",data.locks,data.locks);
+function val(id){return document.getElementById(id).value}
+function build(){const locks=[...document.querySelectorAll("#locks .selected")].map(x=>x.textContent).join("、");const t=`請以我提供的參考照片作為人物唯一參考，進行高品質、自然寫實的服裝造型轉換。\n\n【角色分類】${selected.category}\n【造型風格】${selected.style}\n【服裝設定】主色：${val("color")}；材質：${val("fabric")}。\n【姿勢】${val("pose")}。\n【場景】${val("scene")}。\n【鏡頭構圖】${val("framing")}。\n【影像風格】${val("quality")}。\n【人物保留要求】${locks||"盡可能保留原人物辨識特徵"}。\n【額外要求】${val("extra")||"無"}。\n\n請只變更服裝與指定場景，不要任意改變人物身分。維持合理的人體結構、自然手指、服裝剪裁與布料物理效果。光線、陰影與人物透視需一致，避免塑膠皮膚、過度磨皮、肢體扭曲、額外手指、文字浮水印與不自然配件。成品應具有高質感商業時尚攝影的完成度。`;document.getElementById("promptText").value=t}
+["color","fabric","pose","framing","scene","quality","extra"].forEach(id=>document.getElementById(id).addEventListener("input",build));
+document.getElementById("regen").onclick=build;build();
+function preview(input,img){input.addEventListener("change",()=>{const f=input.files[0];if(!f)return;const u=URL.createObjectURL(f);img.src=u;img.style.display="block"})}
+preview(document.getElementById("photo"),document.getElementById("photoPreview"));preview(document.getElementById("tryPhoto"),document.getElementById("tryPreview"));
+async function copyText(text,feedback){try{await navigator.clipboard.writeText(text);feedback.textContent="✓ 已複製到剪貼簿"}catch(e){feedback.textContent="瀏覽器未授權自動複製，請長按文字自行複製。"}}
+document.getElementById("copy").onclick=()=>copyText(document.getElementById("promptText").value,document.getElementById("feedback"));
+document.getElementById("save").onclick=()=>{const blob=new Blob([document.getElementById("promptText").value],{type:"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="AI百變換裝提示詞.txt";a.click();URL.revokeObjectURL(a.href)};
+document.getElementById("makePrompt").onclick=()=>{const d=document.getElementById("tryDescription").value.trim();document.getElementById("tryPrompt").value=`請編輯我上傳的照片，將原人物的服裝與造型轉換為以下設計：${d||"依照指定描述進行高質感換裝"}。\n請盡可能維持同一人物的臉部辨識特徵、髮型、膚色、年齡感與自然身形比例。只依需求修改服裝及背景。確保服裝貼合身體、布料紋理真實、人體結構正確、手指自然，並保持光影與透視一致。輸出高解析度、自然寫實的完整成品。`};
+document.getElementById("copyTry").onclick=()=>copyText(document.getElementById("tryPrompt").value,document.getElementById("tryPrompt"));
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("prompt").classList.toggle("hide",b.dataset.tab!=="prompt");document.getElementById("tryon").classList.toggle("hide",b.dataset.tab!=="tryon")});
+</script></body></html>
