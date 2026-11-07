@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b16">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>AI 百變換裝工作室 V1.5</title>
+<title>AI 百變換裝工作室 V1.6</title>
 <style>
 :root{--bg:#090b16;--panel:#12182a;--panel2:#192139;--line:#303b5c;--text:#f5f3ff;--muted:#aab3ce;--pink:#ef67d7;--purple:#9b80ff;--cyan:#50d9e7;--green:#6de0b2}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#30204e 0,transparent 38%),radial-gradient(ellipse at 0% 45%,#102e42 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Noto Sans TC",sans-serif}
@@ -12,18 +12,18 @@ header{padding:20px max(18px,calc((100% - 1240px)/2));border-bottom:1px solid va
 main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:22px 0}.hero h2{margin:0;font-size:22px}.hero p{color:var(--muted);max-width:730px;margin:5px 0}.version{border:1px solid #7658b5;color:#e3ceff;border-radius:999px;padding:6px 12px;font-size:12px;white-space:nowrap}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tab,.btn,.chip{cursor:pointer;font:inherit}.tab{border:1px solid var(--line);background:#111629;color:var(--muted);padding:10px 15px;border-radius:12px}.tab.active{background:linear-gradient(100deg,#38205f,#241a46);border-color:var(--pink);color:white;box-shadow:0 0 18px #b04bca33}
 .layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:17px}.panel{background:linear-gradient(145deg,#151c30,#0f1423);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 12px 40px #0004}.panel h2{font-size:16px;margin:0 0 13px}.section{margin:17px 0}.section>label,.field label{display:block;font-size:13px;color:#dce0f4;margin-bottom:7px}.choices{display:flex;flex-wrap:wrap;gap:7px}.chip{border:1px solid #394565;background:#0d1323;color:#d9def2;padding:7px 11px;border-radius:999px;font-size:12px}.chip.selected{border-color:var(--pink);background:#51234e;color:white;box-shadow:0 0 12px #e75cc733}
-.field{margin:10px 0}select,input[type=text],textarea{width:100%;background:#0a0e1b;border:1px solid #3a4564;border-radius:10px;color:white;padding:10px;font:inherit}select option{background:#101629}textarea{min-height:220px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.upload{border:1px dashed #69749b;border-radius:14px;padding:14px;text-align:center;background:#0b1020}.upload input{max-width:100%;margin:8px}.preview{width:100%;max-height:290px;object-fit:contain;border-radius:12px;margin-top:10px;background:#05070d;display:none}.small{color:var(--muted);font-size:11px}.btn{border:0;border-radius:10px;padding:10px 14px;color:white;font-weight:650;background:linear-gradient(100deg,#7656ef,#d54dbb)}.btn.secondary{background:#242d46;border:1px solid #465473}.btn.cyan{background:linear-gradient(100deg,#147f9b,#25b8bd)}.btn.ghost{background:transparent;border:1px solid #596482;color:#dfe5fa}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.notice{background:#151e31;border:1px solid #3b5673;border-radius:12px;padding:11px;color:#c5d9eb;font-size:12px;margin-top:12px}.notice strong{color:#7de8f1}.previewWrap{min-height:145px;display:grid;place-items:center;border:1px dashed #414b69;border-radius:14px;color:#7884a3;text-align:center;padding:15px}.hide{display:none!important}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:6px}.history{display:grid;gap:7px;margin-top:9px}.history button{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.footer{color:#737f9e;font-size:11px;text-align:center;margin:25px 0}.tag{font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:8px}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.hero{display:block}.version{display:inline-block;margin-top:9px}header{padding:15px 18px}.grid2{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){.grid2{grid-template-columns:1fr}.panel{padding:14px}.tab{flex:1}}
+.field{margin:10px 0}select,input[type=text],textarea{width:100%;background:#0a0e1b;border:1px solid #3a4564;border-radius:10px;color:white;padding:10px;font:inherit}select option{background:#101629}textarea{min-height:220px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.upload{border:1px dashed #69749b;border-radius:14px;padding:14px;text-align:center;background:#0b1020}.upload input{max-width:100%;margin:8px}.preview{width:100%;max-height:290px;object-fit:contain;border-radius:12px;margin-top:10px;background:#05070d;display:none}.small{color:var(--muted);font-size:11px}.btn{border:0;border-radius:10px;padding:10px 14px;color:white;font-weight:650;background:linear-gradient(100deg,#7656ef,#d54dbb)}.btn.secondary{background:#242d46;border:1px solid #465473}.btn.cyan{background:linear-gradient(100deg,#147f9b,#25b8bd)}.btn.ghost{background:transparent;border:1px solid #596482;color:#dfe5fa}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.notice{background:#151e31;border:1px solid #3b5673;border-radius:12px;padding:11px;color:#c5d9eb;font-size:12px;margin-top:12px}.notice strong{color:#7de8f1}.previewWrap{min-height:145px;display:grid;place-items:center;border:1px dashed #414b69;border-radius:14px;color:#7884a3;text-align:center;padding:15px}.hide{display:none!important}.status{font-size:12px;color:var(--green);min-height:18px;margin-top:6px}.history{display:grid;gap:7px;margin-top:9px}.history button{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pose-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.pose-card{border:1px solid #394565;background:linear-gradient(145deg,#111a2d,#0b1020);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:180px}.pose-card.selected{border-color:var(--pink);box-shadow:0 0 16px #e75cc733}.pose-icon{font-size:30px}.pose-card strong{font-size:14px}.pose-card p{font-size:12px;color:var(--muted);margin:0;flex:1}.pose-card button{align-self:flex-start}.footer{color:#737f9e;font-size:11px;text-align:center;margin:25px 0}.tag{font-size:11px;color:var(--cyan);letter-spacing:1px;margin-bottom:8px}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.pose-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{display:block}.version{display:inline-block;margin-top:9px}header{padding:15px 18px}.grid2{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.pose-grid{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.panel{padding:14px}.tab{flex:1}}
 
 .auth-locked>header,.auth-locked>main{display:none!important}.auth-gate{display:none;min-height:100vh;place-items:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#30204e 0,transparent 55%),var(--bg)}.auth-locked .auth-gate{display:grid}.auth-card{width:min(100%,430px);padding:30px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#151c30,#0f1423);box-shadow:0 20px 70px #0008;text-align:center}.auth-card .logo{margin:0 auto 16px}.auth-card h1{margin:10px 0}.auth-card p{color:var(--muted)}.auth-email{padding:12px;border:1px solid #465473;border-radius:10px;background:#0a0e1b;margin:18px 0}.auth-card .btn{width:100%}.auth-message{min-height:24px;margin-top:12px;color:var(--green);font-size:13px}
 </style></head>
 <body class="auth-locked">
 <div id="authGate" class="auth-gate"><div class="auth-card"><div class="logo">✦</div><div class="eyebrow">PRIVATE AI TRANSFORMATION STUDIO</div><h1>私人換裝工作室</h1><p>此工作室僅開放授權帳號使用。輸入專屬 Email，我們會寄送一次性登入連結。</p><div class="auth-email">royalsdada@gmail.com</div><button id="authSend" class="btn">寄送安全登入連結</button><div id="authMessage" class="auth-message" aria-live="polite"></div><p class="small">請在同一個瀏覽器開啟收到的登入連結。請勿轉寄給他人。</p></div></div>
-<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.5</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
+<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.6</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
 <main>
-<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>造型資料庫升級版。更細緻控制服裝剪裁、配件、鞋款與拍攝場景，並可收藏喜愛設定、回看最近使用的提示詞。</p></div><span class="version">✦ V1.5 · STYLE LIBRARY</span></div>
-<div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="library">♡ 我的收藏與紀錄</button></div>
+<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V1.6 · POSE LIBRARY</span></div>
+<div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="poses">♙ 姿勢資料庫</button><button class="tab" data-tab="library">♡ 我的收藏與紀錄</button></div>
 <section id="prompt" class="layout">
 <div class="panel">
 <div class="tag">01 / CHARACTER & STYLE</div><h2>選擇角色與造型</h2>
@@ -38,7 +38,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="field"><label>鞋款</label><select id="shoes"><option>依造型自然搭配</option><option>高跟鞋</option><option>長靴</option><option>短靴</option><option>運動鞋</option><option>樂福鞋</option><option>涼鞋</option><option>奇幻戰靴</option></select></div>
 <div class="field"><label>配件</label><select id="accessory"><option>精緻簡約配件</option><option>珍珠耳環與項鍊</option><option>蝴蝶結髮飾</option><option>皮革腰帶與手套</option><option>皇冠與寶石</option><option>奇幻披風與徽章</option><option>科技護目鏡與耳機</option><option>不添加配件</option></select></div>
 <div class="field"><label>服裝合身程度</label><select id="fit"><option>符合人體工學的自然合身</option><option>俐落修身剪裁</option><option>寬鬆休閒版型</option><option>正式訂製服剪裁</option><option>層次豐富的戲服設計</option></select></div>
-<div class="field"><label>姿勢</label><select id="pose"><option>自然站姿，身體微側</option><option>自信走路，捕捉動態瞬間</option><option>優雅坐姿</option><option>雙手自然垂放</option><option>一手叉腰的時尚姿勢</option><option>依場景自然安排</option><option>回眸看向鏡頭</option></select></div>
+<div class="field"><label>姿勢（可從姿勢資料庫挑選）</label><select id="pose"><option>自然站姿，身體微側</option><option>自信走路，捕捉動態瞬間</option><option>優雅坐姿</option><option>雙手自然垂放</option><option>一手叉腰的時尚姿勢</option><option>依場景自然安排</option><option>回眸看向鏡頭</option></select><p class="small">也可以前往「姿勢資料庫」挑選更精確的動作描述。</p></div>
 <div class="field"><label>鏡頭構圖</label><select id="framing"><option>全身直幅人像</option><option>七分身時尚攝影</option><option>半身肖像</option><option>電影感低角度全身照</option><option>自然視線高度，中景</option><option>雜誌封面構圖</option></select></div>
 <div class="field"><label>場景</label><select id="scene"><option>明亮高級攝影棚</option><option>韓系都會街景</option><option>日式校園庭院</option><option>豪華飯店大廳</option><option>奇幻城堡與星光</option><option>未來科技城市</option><option>海邊黃昏</option><option>古風庭園</option><option>演唱會舞台</option><option>依服裝風格智慧搭配</option></select></div>
 <div class="field"><label>影像風格</label><select id="quality"><option>超寫實時尚攝影，細節清晰</option><option>電影劇照風格，戲劇光影</option><option>自然光人像攝影，膚質真實</option><option>高質感奇幻概念藝術</option><option>日系雜誌寫真</option><option>韓國時尚品牌形象照</option><option>復古底片攝影</option></select></div>
@@ -56,6 +56,18 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
 <div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：等待串接</strong><br>V1.5 已完成換裝規格與提示詞設計。真正的網頁內生圖需要安全後端與圖像模型 API，金鑰不可放在前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button></div><div class="status" id="tryStatus"></div></div></div>
 </section>
+
+<section id="poses" class="hide">
+  <div class="hero"><div><h2>專屬姿勢資料庫</h2><p>從動作類型挑選姿勢，將身體方向、手腳位置、重心與鏡頭構圖一起帶入換裝提示詞。這是工作室自建的文字姿勢庫，後續可再加入經授權的參考圖片。</p></div><span class="version">✧ POSE LAB · 01</span></div>
+  <div class="panel">
+    <div class="section"><label>動作分類</label><div class="choices" id="poseFilters"></div></div>
+    <div class="section"><label>目前選取</label><div class="notice" id="poseSelected">自然站姿，身體微側</div></div>
+    <div class="pose-grid" id="poseCards"></div>
+    <div class="actions"><button class="btn" id="applyPose">套用姿勢到提示詞</button><button class="btn secondary" id="randomPose">隨機挑選姿勢</button></div>
+    <div class="status" id="poseStatus" aria-live="polite"></div>
+  </div>
+  <div class="notice"><strong>姿勢參考說明</strong><br>目前先建立不依賴第三方圖片的自有姿勢描述庫。未來取得素材授權或使用自製參考圖後，再加入縮圖、多視角及深度圖功能。</div>
+</section>
 <section id="library" class="layout hide">
 <div class="panel"><div class="tag">MY STYLE VAULT</div><h2>收藏的造型設定</h2><p class="small">收藏資料只保存在目前瀏覽器。清除瀏覽器網站資料可能會刪除收藏。</p><div id="favorites" class="history"></div></div>
 <div class="panel"><div class="tag">RECENT PROMPTS</div><h2>最近使用紀錄</h2><div id="history" class="history"></div><div class="actions"><button class="btn ghost" id="clearHistory">清除使用紀錄</button></div></div>
@@ -65,12 +77,27 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <script>
 const data={categories:["職業制服","時尚造型","動漫 COSPLAY","奇幻角色","電影與遊戲","古風造型","舞台表演","自訂角色"],styles:["韓系甜美","日系學院","空姐制服","優雅晚禮服","街頭潮流","奇幻女騎士","魔法公主","未來科技","古風仙俠","運動休閒","復古名媛","黑暗哥德","偶像打歌服","海軍風制服","都會商務","婚紗造型","夏日度假","賽博龐克","蒸氣龐克","精靈森林","皇家禮服","機能戰術","賽車女郎","芭蕾舞者","自訂造型"],locks:["保留臉部五官","保留髮型與髮色","保留自然膚色","保留原始身形比例","自然手部與肢體","不改變人物年齡感"]};
 let selected={category:"時尚造型",style:"韓系甜美"};
+const poseLibrary = [
+ {id:"stand",cat:"站姿",icon:"🧍‍♀️",name:"自然微側站姿",desc:"身體向左或右微轉約 15 度，重心落在後腳，肩膀放鬆，雙手自然垂放。",prompt:"自然站立，身體微側約 15 度，重心穩定落在後腳，肩膀放鬆，雙手自然垂放於身體兩側。"},
+ {id:"fashion",cat:"站姿",icon:"💃",name:"時尚叉腰姿勢",desc:"一手輕放腰側，另一手自然下垂，骨盆微側，呈現俐落時尚感。",prompt:"時尚站姿，一手自然叉腰，另一手放鬆垂下，骨盆微側，肩線舒展，姿態自信但不僵硬。"},
+ {id:"lookback",cat:"站姿",icon:"↩️",name:"回眸姿勢",desc:"身體背向鏡頭約 30 度，頭部回轉看向鏡頭，肩頸自然。",prompt:"身體背向鏡頭約 30 度，頭部自然回轉望向鏡頭，肩頸放鬆，呈現優雅回眸瞬間。"},
+ {id:"walk",cat:"動態",icon:"🚶‍♀️",name:"自然行走",desc:"前腳跨步、後腳跟抬起，手臂隨步伐輕微擺動。",prompt:"捕捉自然行走瞬間，前腳向前跨步，後腳腳跟微抬，雙臂依步伐輕微擺動，衣料呈現自然動態。"},
+ {id:"turn",cat:"動態",icon:"🌀",name:"轉身瞬間",desc:"軀幹正在轉向鏡頭，裙擺或外套隨動作產生輕微飄動。",prompt:"捕捉自然轉身的瞬間，軀幹流暢轉向鏡頭，衣襬因動作產生適度飄動，四肢比例與關節位置正確。"},
+ {id:"sit",cat:"坐姿",icon:"🪑",name:"優雅椅坐",desc:"坐在椅面前段，背部自然挺直，雙膝靠攏並略微斜向一側。",prompt:"優雅坐在椅面前段，背部自然挺直，雙膝靠攏並略微斜向一側，雙手輕放大腿或椅緣。"},
+ {id:"floor",cat:"坐姿",icon:"🧘‍♀️",name:"地面側坐",desc:"雙腿自然彎曲並偏向一側，一手輕撐地面保持平衡。",prompt:"在地面採自然側坐姿勢，雙腿彎曲並收向身體一側，一手輕撐地面保持平衡，軀幹自然延伸。"},
+ {id:"kneel",cat:"跪姿",icon:"🙇‍♀️",name:"雙膝跪姿",desc:"雙膝自然著地，背部挺直，雙手輕放大腿，姿態穩定。",prompt:"雙膝自然跪地，膝蓋間距符合舒適姿勢，背部挺直，雙手輕放大腿，重心穩定。"},
+ {id:"lunge",cat:"跪姿",icon:"🧎‍♀️",name:"單膝半跪",desc:"一膝著地、另一腳踩穩地面，身體保持平衡並面向鏡頭。",prompt:"採單膝半跪姿勢，一膝自然著地，另一腳踩穩地面，軀幹保持平衡並面向鏡頭。"},
+ {id:"dance",cat:"舞蹈",icon:"🩰",name:"芭蕾延伸",desc:"一手向上延伸、另一手向側方展開，軀幹拉長。",prompt:"芭蕾舞蹈延伸姿勢，一手優雅向上延伸，另一手向側方展開，軀幹拉長，手指自然舒展。"},
+ {id:"cheer",cat:"舞蹈",icon:"📣",name:"啦啦隊應援",desc:"雙手高舉呈開展角度，身體挺拔，表情充滿活力。",prompt:"啦啦隊應援動作，雙手向上高舉並自然打開，身體挺拔，重心穩定，呈現充滿活力的瞬間。"},
+ {id:"jump",cat:"運動",icon:"🤸‍♀️",name:"跳躍定格",desc:"雙腳離地、四肢自然展開，注意關節與重心的合理性。",prompt:"捕捉輕盈跳躍的定格瞬間，雙腳自然離地，手臂適度展開，身體比例與關節方向符合真實運動力學。"}
+];
+let activePoseId="stand", activePoseFilter="全部";
 const $=id=>document.getElementById(id);
 function choices(id,items,initial){const root=$(id);items.forEach(v=>{const b=document.createElement("button");b.className="chip"+(initial.includes(v)?" selected":"");b.textContent=v;b.type="button";b.onclick=()=>{if(id==="locks")b.classList.toggle("selected");else{root.querySelectorAll(".chip").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");selected[id==="categories"?"category":"style"]=v;build()}};root.appendChild(b)})}
 choices("categories",data.categories,["時尚造型"]);choices("styles",data.styles,["韓系甜美"]);choices("locks",data.locks,data.locks);
 const fields=["color","fabric","neck","sleeve","bottom","shoes","accessory","fit","pose","framing","scene","quality","extra"];
 function val(id){return $(id).value}
-function build(){const lock=[...document.querySelectorAll("#locks .selected")].map(x=>x.textContent).join("、");const t="請以我提供的參考照片作為人物唯一參考，進行高品質、自然寫實的服裝造型轉換。\n\n【角色分類】"+selected.category+"\n【造型風格】"+selected.style+"\n【服裝設定】主色："+val("color")+"；材質："+val("fabric")+"；領口："+val("neck")+"；袖型："+val("sleeve")+"；下身："+val("bottom")+"；鞋款："+val("shoes")+"；配件："+val("accessory")+"；剪裁："+val("fit")+"。\n【姿勢】"+val("pose")+"。\n【場景】"+val("scene")+"。\n【鏡頭構圖】"+val("framing")+"。\n【影像風格】"+val("quality")+"。\n【人物保留要求】"+(lock||"盡可能保留原人物辨識特徵")+"。\n【額外要求】"+(val("extra")||"無")+"。\n\n請只變更服裝與指定場景，不要任意改變人物身分。維持合理人體結構、自然手指、服裝剪裁與布料物理效果。光線、陰影與人物透視需一致，避免塑膠皮膚、過度磨皮、肢體扭曲、額外手指、文字浮水印與不自然配件。成品應具有高質感商業時尚攝影的完成度。";$("promptText").value=t;return t}
+function build(){const poseDetail=poseLibrary.find(p=>p.id===activePoseId);const lock=[...document.querySelectorAll("#locks .selected")].map(x=>x.textContent).join("、");const t="請以我提供的參考照片作為人物唯一參考，進行高品質、自然寫實的服裝造型轉換。\n\n【角色分類】"+selected.category+"\n【造型風格】"+selected.style+"\n【服裝設定】主色："+val("color")+"；材質："+val("fabric")+"；領口："+val("neck")+"；袖型："+val("sleeve")+"；下身："+val("bottom")+"；鞋款："+val("shoes")+"；配件："+val("accessory")+"；剪裁："+val("fit")+"。\n【姿勢】"+val("pose")+"。\n【場景】"+val("scene")+"。\n【鏡頭構圖】"+val("framing")+"。\n【影像風格】"+val("quality")+"。\n【人物保留要求】"+(lock||"盡可能保留原人物辨識特徵")+"。\n【額外要求】"+(val("extra")||"無")+"。\n\n請只變更服裝與指定場景，不要任意改變人物身分。維持合理人體結構、自然手指、服裝剪裁與布料物理效果。光線、陰影與人物透視需一致，避免塑膠皮膚、過度磨皮、肢體扭曲、額外手指、文字浮水印與不自然配件。成品應具有高質感商業時尚攝影的完成度。";$("promptText").value=t;return t}
 fields.forEach(id=>$(id).addEventListener("input",build));$("build").onclick=()=>{build();$("buildStatus").textContent="✓ 已重新組合提示詞"};
 function getStore(k){try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}}function putStore(k,v){localStorage.setItem(k,JSON.stringify(v))}
 function snapshot(){return {category:selected.category,style:selected.style,values:Object.fromEntries(fields.map(id=>[id,val(id)])),locks:[...document.querySelectorAll("#locks .selected")].map(x=>x.textContent),prompt:$("promptText").value,date:new Date().toLocaleString("zh-TW")}}
@@ -84,10 +111,31 @@ function preview(input,img){$(input).addEventListener("change",()=>{const f=$(in
 preview("photo","photoPreview");preview("tryPhoto","tryPreview");
 $("makePrompt").onclick=()=>{const d=$("tryDescription").value.trim();$("tryPrompt").value="請編輯我上傳的照片，將原人物的服裝與造型轉換為以下設計："+(d||"依照指定描述進行高質感換裝")+"。\n請盡可能維持同一人物的臉部辨識特徵、髮型、膚色、年齡感與自然身形比例。只依需求修改服裝及背景。確保服裝貼合身體、布料紋理真實、人體結構正確、手指自然，並保持光影與透視一致。輸出高解析度、自然寫實的完整成品。";$("tryStatus").textContent="✓ 換裝指令已產生，複製後可交給支援圖片編輯的 AI。"};
 $("copyTry").onclick=()=>copyText($("tryPrompt").value,$("tryStatus"));
-function switchTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["prompt","tryon","library"].forEach(x=>$(x).classList.toggle("hide",x!==id));if(id==="library")renderList()}
+
+function renderPoseLibrary(){
+ const filters=["全部",...new Set(poseLibrary.map(p=>p.cat))], fr=$("poseFilters");
+ fr.innerHTML="";
+ filters.forEach(cat=>{const b=document.createElement("button");b.className="chip"+(activePoseFilter===cat?" selected":"");b.textContent=cat;b.onclick=()=>{activePoseFilter=cat;renderPoseLibrary()};fr.appendChild(b)});
+ const root=$("poseCards");root.innerHTML="";
+ poseLibrary.filter(p=>activePoseFilter==="全部"||p.cat===activePoseFilter).forEach(p=>{
+  const card=document.createElement("article");card.className="pose-card"+(p.id===activePoseId?" selected":"");
+  const icon=document.createElement("div");icon.className="pose-icon";icon.textContent=p.icon;
+  const title=document.createElement("strong");title.textContent=p.name;
+  const desc=document.createElement("p");desc.textContent=p.desc;
+  const choose=document.createElement("button");choose.className="btn "+(p.id===activePoseId?"":"secondary");choose.textContent=p.id===activePoseId?"已選取":"選擇姿勢";
+  choose.onclick=()=>{activePoseId=p.id;$("poseSelected").textContent=p.name+"："+p.prompt;renderPoseLibrary()};
+  card.append(icon,title,desc,choose);root.appendChild(card);
+ });
+ const active=poseLibrary.find(p=>p.id===activePoseId);
+ $("poseSelected").textContent=active.name+"："+active.prompt;
+}
+$("applyPose").onclick=()=>{const p=poseLibrary.find(x=>x.id===activePoseId);$("pose").value=p.prompt;build();$("poseStatus").textContent="✓ 已套用「"+p.name+"」，提示詞已同步更新。";switchTab("prompt")};
+$("randomPose").onclick=()=>{const list=poseLibrary.filter(p=>activePoseFilter==="全部"||p.cat===activePoseFilter);const p=list[Math.floor(Math.random()*list.length)];activePoseId=p.id;renderPoseLibrary();$("poseStatus").textContent="已隨機選取："+p.name};
+
+function switchTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));["prompt","tryon","poses","library"].forEach(x=>$(x).classList.toggle("hide",x!==id));if(id==="library")renderList();if(id==="poses")renderPoseLibrary()}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 $("clearHistory").onclick=()=>{if(confirm("確定清除最近使用紀錄？")){putStore("outfitHistory",[]);renderList()}};
-build();renderList();
+build();renderList();renderPoseLibrary();
 </script>
 <script>
 (() => {
