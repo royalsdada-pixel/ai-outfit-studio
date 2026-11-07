@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b16">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<title>AI 百變換裝工作室 V1.6</title>
+<title>AI 百變換裝工作室 V1.8</title>
 <style>
 :root{--bg:#090b16;--panel:#12182a;--panel2:#192139;--line:#303b5c;--text:#f5f3ff;--muted:#aab3ce;--pink:#ef67d7;--purple:#9b80ff;--cyan:#50d9e7;--green:#6de0b2}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#30204e 0,transparent 38%),radial-gradient(ellipse at 0% 45%,#102e42 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Noto Sans TC",sans-serif}
@@ -20,9 +20,9 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 </style></head>
 <body class="auth-locked">
 <div id="authGate" class="auth-gate"><div class="auth-card"><div class="logo">✦</div><div class="eyebrow">PRIVATE AI TRANSFORMATION STUDIO</div><h1>私人換裝工作室</h1><p>此工作室僅開放授權帳號使用。輸入專屬 Email，我們會寄送一次性登入連結。</p><div class="auth-email">royalsdada@gmail.com</div><button id="authSend" class="btn">寄送安全登入連結</button><div id="authMessage" class="auth-message" aria-live="polite"></div><p class="small">請在同一個瀏覽器開啟收到的登入連結。請勿轉寄給他人。</p></div></div>
-<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.6</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
+<header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V1.8</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
 <main>
-<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V1.6 · POSE LIBRARY</span></div>
+<div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V1.8 · ADULT FASHION MODE</span></div>
 <div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="poses">♙ 姿勢資料庫</button><button class="tab" data-tab="library">♡ 我的收藏與紀錄</button></div>
 <section id="prompt" class="layout">
 <div class="panel">
@@ -53,7 +53,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="notice"><strong>人物一致性小技巧</strong><br>使用清晰、光線均勻、臉部未被遮擋的原圖。提示詞會要求保留人物特徵，但生成模型仍可能出現細微差異。</div>
 </div></section>
 <section id="tryon" class="layout hide">
-<div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
+<div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><div class="section"><label>換裝風格模式</label><div class="choices" id="modeChoices"><button type="button" class="chip selected" data-mode="standard">✨ 一般時尚</button><button type="button" class="chip" data-mode="adult">🔞 成人性感寫真</button></div><p class="small" id="modeHint">一般模式：日常穿搭、角色扮演、時尚與奇幻造型。</p><label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="adultConfirm" type="checkbox" style="width:auto"> 我確認人物皆為成年人，且只製作非露骨的成人時尚影像。</label><p class="small">成人模式僅支援成熟性感時尚、泳裝、內衣型錄與人體藝術氛圍；不支援露骨裸露或性行為內容。</p></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
 <div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：後端已部署，等待 API 金鑰</strong><br>OpenAI 圖像編輯已接上安全後端。設定 API 金鑰後即可開始實際生成；金鑰不會放在網站前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button><button class="btn cyan" id="generateImage">✨ 確認生成圖片</button></div><div class="status" id="tryStatus" aria-live="polite"></div><p class="small">使用 OpenAI GPT Image 2。生成費用依 API 帳戶計價。</p></div></div>
 </section>
 
@@ -72,7 +72,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="panel"><div class="tag">MY STYLE VAULT</div><h2>收藏的造型設定</h2><p class="small">收藏資料只保存在目前瀏覽器。清除瀏覽器網站資料可能會刪除收藏。</p><div id="favorites" class="history"></div></div>
 <div class="panel"><div class="tag">RECENT PROMPTS</div><h2>最近使用紀錄</h2><div id="history" class="history"></div><div class="actions"><button class="btn ghost" id="clearHistory">清除使用紀錄</button></div></div>
 </section>
-<div class="footer">AI 百變換裝工作室 V1.5 · 造型資料庫與本機收藏版</div>
+<div class="footer">AI 百變換裝工作室 V1.8 · 私人換裝與成人時尚模式</div>
 </main>
 <script>
 const data={categories:["職業制服","時尚造型","動漫 COSPLAY","奇幻角色","電影與遊戲","古風造型","舞台表演","自訂角色"],styles:["韓系甜美","日系學院","空姐制服","優雅晚禮服","街頭潮流","奇幻女騎士","魔法公主","未來科技","古風仙俠","運動休閒","復古名媛","黑暗哥德","偶像打歌服","海軍風制服","都會商務","婚紗造型","夏日度假","賽博龐克","蒸氣龐克","精靈森林","皇家禮服","機能戰術","賽車女郎","芭蕾舞者","自訂造型"],locks:["保留臉部五官","保留髮型與髮色","保留自然膚色","保留原始身形比例","自然手部與肢體","不改變人物年齡感"]};
@@ -110,7 +110,8 @@ async function copyText(t,el){try{await navigator.clipboard.writeText(t);el.text
 $("copy").onclick=()=>copyText($("promptText").value,$("feedback"));$("save").onclick=()=>{const blob=new Blob([$("promptText").value],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="AI百變換裝提示詞.txt";a.click();URL.revokeObjectURL(a.href)};
 function preview(input,img){$(input).addEventListener("change",()=>{const f=$(input).files[0];if(!f)return;if(!f.type.startsWith("image/"))return;const u=URL.createObjectURL(f);$(img).src=u;$(img).style.display="block"})}
 preview("photo","photoPreview");preview("tryPhoto","tryPreview");
-$("makePrompt").onclick=()=>{const d=$("tryDescription").value.trim();$("tryPrompt").value="請編輯我上傳的照片，將原人物的服裝與造型轉換為以下設計："+(d||"依照指定描述進行高質感換裝")+"。\n請盡可能維持同一人物的臉部辨識特徵、髮型、膚色、年齡感與自然身形比例。只依需求修改服裝及背景。確保服裝貼合身體、布料紋理真實、人體結構正確、手指自然，並保持光影與透視一致。輸出高解析度、自然寫實的完整成品。";$("tryStatus").textContent="✓ 換裝指令已產生，複製後可交給支援圖片編輯的 AI。"};
+let outfitMode="standard";document.querySelectorAll("#modeChoices [data-mode]").forEach(b=>b.onclick=()=>{outfitMode=b.dataset.mode;document.querySelectorAll("#modeChoices [data-mode]").forEach(x=>x.classList.toggle("selected",x===b));$("modeHint").textContent=outfitMode==="adult"?"成人模式：成熟性感時尚、泳裝、內衣型錄與人體藝術氛圍，保持非露骨呈現。":"一般模式：日常穿搭、角色扮演、時尚與奇幻造型。"});
+$("makePrompt").onclick=()=>{const d=$("tryDescription").value.trim();if(outfitMode==="adult"&&!$("adultConfirm").checked){$("tryStatus").textContent="請先確認人物皆為成年人，並同意只製作非露骨內容。";return}const modeText=outfitMode==="adult"?"【成人時尚模式】人物皆為成年人。以成熟、優雅、性感但非露骨的成人時尚寫真呈現，可使用合身晚裝、泳裝、內衣型錄造型或人體藝術氛圍；保持時尚攝影語境，不描繪性行為、性器官或露骨裸露。":"【一般時尚模式】依照一般時尚、日常穿搭、角色扮演或奇幻造型呈現。";$("tryPrompt").value=modeText+"\\n請編輯我上傳的照片，將原人物的服裝與造型轉換為以下設計："+(d||"依照指定描述進行高質感換裝")+"。\\n請盡可能維持同一人物的臉部辨識特徵、髮型、膚色、年齡感、身形比例與原始姿勢。只依需求修改服裝及背景。確保服裝貼合身體、布料紋理真實、人體結構正確、手指自然，並保持光影與透視一致。輸出高解析度、自然寫實的完整成品。";$("tryStatus").textContent="✓ 已產生"+(outfitMode==="adult"?"成人時尚":"一般時尚")+"換裝指令。"};
 $("copyTry").onclick=()=>copyText($("tryPrompt").value,$("tryStatus"));
 
 
