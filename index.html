@@ -48,13 +48,13 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <div class="actions"><button class="btn" id="build">重新組合提示詞</button><button class="btn secondary" id="favorite">♡ 收藏目前設定</button></div><div class="status" id="buildStatus"></div>
 </div>
 <div class="panel">
-<div class="tag">02 / REFERENCE & PROMPT</div><h2>上傳人物參考照片</h2><div class="upload"><div>📷 選擇人物照片</div><input id="photo" type="file" accept="image/*"><div class="small">支援 JPG、PNG、WebP。照片僅在瀏覽器本機預覽，不會自動上傳。</div><img id="photoPreview" class="preview" alt="上傳照片預覽"></div>
+<div class="tag">02 / REFERENCE & PROMPT</div><h2>上傳人物參考照片</h2><div class="upload"><div>📷 選擇人物照片</div><input id="photo" type="file" accept="image/*"><div class="small">支援 JPG、PNG、WebP。照片僅在瀏覽器本機預覽，不會自動上傳。</div><img id="photoPreview" class="preview" alt="上傳照片預覽"><div class="actions"><button class="btn secondary" id="uploadSource">安全保存原始照片</button></div><div class="status" id="sourceUploadStatus"></div></div>
 <div class="section"><h2>完整生圖提示詞</h2><div class="small">自動更新後仍可手動修改文字。</div><textarea id="promptText"></textarea><div class="actions"><button class="btn" id="copy">複製完整指令</button><button class="btn secondary" id="save">下載 TXT</button><button class="btn ghost" id="historySave">加入使用紀錄</button></div><div class="status" id="feedback" aria-live="polite"></div></div>
 <div class="notice"><strong>人物一致性小技巧</strong><br>使用清晰、光線均勻、臉部未被遮擋的原圖。提示詞會要求保留人物特徵，但生成模型仍可能出現細微差異。</div>
 </div></section>
 <section id="tryon" class="layout hide">
-<div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
-<div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：等待串接</strong><br>V1.5 已完成換裝規格與提示詞設計。真正的網頁內生圖需要安全後端與圖像模型 API，金鑰不可放在前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button></div><div class="status" id="tryStatus"></div></div></div>
+<div class="panel"><div class="tag">03 / IMAGE TRANSFORMATION</div><h2>準備換裝素材</h2><div class="upload"><div>📷 選擇要換裝的人物照片</div><input id="tryPhoto" type="file" accept="image/*"><img id="tryPreview" class="preview" alt="換裝照片預覽"><div class="actions"><button class="btn secondary" id="uploadTry">安全保存換裝照片</button></div><div class="status" id="tryUploadStatus"></div></div><div class="field"><label>想換成什麼造型？</label><textarea id="tryDescription" placeholder="例如：將人物服裝改為黑金色奇幻女騎士戰甲，保留原本臉部與髮型，背景改為古老城堡…"></textarea></div><button class="btn cyan" id="makePrompt">產生換裝專用指令</button></div>
+<div class="panel"><div class="tag">MY PRIVATE CLOUD</div><h2>我的雲端照片</h2><p class="small">只有授權帳號可以查看。支援 JPG、PNG、WebP，單張最多 20 MB。</p><div id="cloudAssets" class="history">登入後即可載入私人照片。</div><div class="status" id="cloudStatus"></div></div><div class="panel"><div class="tag">04 / GENERATION</div><h2>AI 換裝結果</h2><div class="previewWrap" id="resultArea">生成結果預覽區<br><span class="small">目前尚未連接圖像生成 API</span></div><div class="notice"><strong>引擎狀態：等待串接</strong><br>V1.5 已完成換裝規格與提示詞設計。真正的網頁內生圖需要安全後端與圖像模型 API，金鑰不可放在前端。</div><div class="field"><label>換裝專用指令</label><textarea id="tryPrompt" placeholder="按下「產生換裝專用指令」後顯示…"></textarea><div class="actions"><button class="btn" id="copyTry">複製換裝指令</button></div><div class="status" id="tryStatus"></div></div></div>
 </section>
 <section id="library" class="layout hide">
 <div class="panel"><div class="tag">MY STYLE VAULT</div><h2>收藏的造型設定</h2><p class="small">收藏資料只保存在目前瀏覽器。清除瀏覽器網站資料可能會刪除收藏。</p><div id="favorites" class="history"></div></div>
@@ -132,6 +132,68 @@ build();renderList();
       ? "寄送失敗：" + error.message
       : "登入連結已寄出！請檢查信箱與垃圾郵件匣。";
   });
+
+  async function uploadPrivate(file, statusId) {
+    const status = document.getElementById(statusId);
+    const {data:{session}} = await client.auth.getSession();
+    if (!session || session.user.email?.toLowerCase() !== OWNER) { status.textContent = "請先登入授權帳號。"; return; }
+    if (!file) { status.textContent = "請先選擇一張照片。"; return; }
+    if (!["image/jpeg","image/png","image/webp"].includes(file.type)) { status.textContent = "格式僅支援 JPG、PNG、WebP。"; return; }
+    if (file.size > 20 * 1024 * 1024) { status.textContent = "照片超過 20 MB，請先壓縮。"; return; }
+    status.textContent = "正在安全上傳…";
+    const ext = file.type === "image/jpeg" ? "jpg" : file.type.split("/")[1];
+    const path = session.user.id + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
+    const {error:upError} = await client.storage.from("outfit-private").upload(path,file,{contentType:file.type,upsert:false});
+    if (upError) { status.textContent = "上傳失敗：" + upError.message; return; }
+    const {error:dbError} = await client.from("outfit_assets").insert({user_id:session.user.id,storage_path:path,asset_kind:"source",mime_type:file.type});
+    if (dbError) {
+      await client.storage.from("outfit-private").remove([path]);
+      status.textContent = "照片資料登記失敗：" + dbError.message;
+      return;
+    }
+    status.textContent = "✓ 照片已存入私人雲端。";
+    await loadPrivateAssets();
+  }
+  async function loadPrivateAssets() {
+    const root = document.getElementById("cloudAssets");
+    if (!root) return;
+    const {data:{session}} = await client.auth.getSession();
+    if (!session || session.user.email?.toLowerCase() !== OWNER) { root.textContent = "登入後即可載入私人照片。"; return; }
+    const {data, error} = await client.from("outfit_assets").select("id,storage_path,asset_kind,created_at").order("created_at",{ascending:false});
+    root.innerHTML = "";
+    if (error) { root.textContent = "讀取失敗：" + error.message; return; }
+    if (!data?.length) { root.textContent = "目前還沒有雲端照片。"; return; }
+    for (const item of data) {
+      const row = document.createElement("div");
+      row.className = "upload";
+      const title = document.createElement("div");
+      title.textContent = (item.asset_kind === "generated" ? "AI 生成作品" : "原始照片") + " · " + new Date(item.created_at).toLocaleString("zh-TW");
+      const {data:signed} = await client.storage.from("outfit-private").createSignedUrl(item.storage_path,300);
+      row.appendChild(title);
+      if (signed?.signedUrl) {
+        const img = document.createElement("img");
+        img.src = signed.signedUrl; img.alt = "私人雲端照片"; img.className = "preview"; img.style.display = "block";
+        row.appendChild(img);
+      }
+      const del = document.createElement("button");
+      del.className = "btn ghost"; del.textContent = "刪除照片";
+      del.onclick = async () => {
+        if (!confirm("確定刪除這張雲端照片？")) return;
+        del.disabled = true;
+        const {error:removeError} = await client.storage.from("outfit-private").remove([item.storage_path]);
+        if (removeError) { alert("刪除失敗：" + removeError.message); del.disabled = false; return; }
+        const {error:rowError} = await client.from("outfit_assets").delete().eq("id",item.id);
+        if (rowError) alert("照片已刪除，但資料紀錄未能同步：" + rowError.message);
+        await loadPrivateAssets();
+      };
+      row.appendChild(del);
+      root.appendChild(row);
+    }
+  }
+  document.getElementById("uploadSource")?.addEventListener("click", () => uploadPrivate(document.getElementById("photo").files[0],"sourceUploadStatus"));
+  document.getElementById("uploadTry")?.addEventListener("click", () => uploadPrivate(document.getElementById("tryPhoto").files[0],"tryUploadStatus"));
+  client.auth.getSession().then(({data}) => { if (data.session?.user?.email?.toLowerCase() === OWNER) loadPrivateAssets(); });
+  client.auth.onAuthStateChange((_event, session) => { if (session?.user?.email?.toLowerCase() === OWNER) setTimeout(loadPrivateAssets,0); });
   window.outfitSupabase = client;
 })();
 </script>
