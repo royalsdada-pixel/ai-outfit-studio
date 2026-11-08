@@ -23,7 +23,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <header><div class="brand"><div class="logo">✦</div><div><div class="eyebrow">AI TRANSFORMATION STUDIO</div><h1>AI 百變換裝工作室 <span style="color:#d77aff">V2.0</span></h1><div class="sub">COSPLAY × FASHION × FANTASY · CREATE YOUR NEXT LOOK</div></div></div></header>
 <main>
 <div class="hero"><div><h2>一張照片，開啟百變造型旅程</h2><p>加入專屬姿勢資料庫，從動作分類挑選姿勢，並將姿勢細節同步帶入 AI 換裝提示詞。</p></div><span class="version">✦ V2.0 · PRIVATE CLOUD GALLERY</span></div>
-<div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="poses">♙ 姿勢資料庫</button><button class="tab" data-tab="library">♡ 我的收藏與紀錄</button></div>
+<div class="tabs"><button class="tab active" data-tab="prompt">✧ 智慧提示詞編輯器</button><button class="tab" data-tab="tryon">▣ AI 實際換裝</button><button class="tab" data-tab="poses">♙ 姿勢資料庫</button><button class="tab" data-tab="library">♡ 作品管理中心</button></div>
 <section id="prompt" class="layout">
 <div class="panel">
 <div class="tag">01 / CHARACTER & STYLE</div><h2>選擇角色與造型</h2>
@@ -263,7 +263,7 @@ build();renderList();renderPoseLibrary();
     const path = session.user.id + "/" + Date.now() + "-" + crypto.randomUUID() + "." + ext;
     const {error:upError} = await client.storage.from("outfit-private").upload(path,file,{contentType:file.type,upsert:false});
     if (upError) { status.textContent = "上傳失敗：" + upError.message; return; }
-    const {error:dbError} = await client.from("outfit_assets").insert({user_id:session.user.id,storage_path:path,asset_kind:"source",mime_type:file.type});
+    const {error:dbError} = await client.from("outfit_assets").insert({user_id:session.user.id,storage_path:path,asset_kind:"source",mime_type:file.type,source_filename:file.name.slice(0,180)});
     if (dbError) {
       await client.storage.from("outfit-private").remove([path]);
       status.textContent = "照片資料登記失敗：" + dbError.message;
