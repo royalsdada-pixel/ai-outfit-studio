@@ -71,6 +71,7 @@ main{max-width:1240px;margin:22px auto;padding:0 18px 50px}.hero{display:flex;ju
 <section id="library" class="layout hide">
 <div class="panel"><div class="tag">MY STYLE VAULT</div><h2>收藏的造型設定</h2><p class="small">收藏資料只保存在目前瀏覽器。清除瀏覽器網站資料可能會刪除收藏。</p><div id="favorites" class="history"></div></div>
 <div class="panel"><div class="tag">RECENT PROMPTS</div><h2>最近使用紀錄</h2><div id="history" class="history"></div><div class="actions"><button class="btn ghost" id="clearHistory">清除使用紀錄</button></div></div>
+<div class="panel" style="grid-column:1/-1"><div class="tag">PRIVATE CREATION ARCHIVE</div><h2>我的雲端作品管理中心</h2><p class="small">原始參考照片與 AI 生成作品都保存在私人空間。生成作品會保留當次提示詞、模型與品質紀錄。</p><div class="actions" id="assetFilters"><button class="chip selected" data-filter="all">全部作品</button><button class="chip" data-filter="generated">AI 生成作品</button><button class="chip" data-filter="source">原始照片</button></div><div id="cloudGallery" class="pose-grid" style="margin-top:14px"></div><div class="status" id="galleryStatus"></div></div>
 </section>
 <div class="footer">AI 百變換裝工作室 V2.0 · 品質選擇與月度預算保護</div>
 </main>
@@ -177,7 +178,7 @@ async function generateOutfitImage(){
  if(!session){status.textContent="登入逾時，請重新登入。";return}
  button.disabled=true;button.textContent="⏳ AI 正在設計新造型…";status.textContent="正在檢查本月預算並安全傳送照片…";
  try{
-  const form=new FormData();form.append("image",file,file.name);form.append("prompt",prompt);form.append("quality",quality);
+  const form=new FormData();form.append("image",file,file.name);form.append("prompt",prompt);form.append("quality",quality);form.append("source_filename",file.name);
   const response=await fetch("https://fmcpklidjdrfwindkqjx.supabase.co/functions/v1/generate-outfit",{
    method:"POST",headers:{Authorization:"Bearer "+session.access_token,apikey:"sb_publishable_gPPvnEb1Qe-A70GckO0waw_IaPRPL4m"},body:form
   });
@@ -271,42 +272,80 @@ build();renderList();renderPoseLibrary();
     status.textContent = "✓ 照片已存入私人雲端。";
     await loadPrivateAssets();
   }
+  window.assetFilter = "all";
   async function loadPrivateAssets() {
-    const root = document.getElementById("cloudAssets");
-    if (!root) return;
+    const roots = [document.getElementById("cloudAssets"), document.getElementById("cloudGallery")].filter(Boolean);
+    if (!roots.length) return;
     const {data:{session}} = await client.auth.getSession();
-    if (!session || session.user.email?.toLowerCase() !== OWNER) { root.textContent = "登入後即可載入私人照片。"; return; }
-    const {data, error} = await client.from("outfit_assets").select("id,storage_path,asset_kind,created_at").order("created_at",{ascending:false});
-    root.innerHTML = "";
-    if (error) { root.textContent = "讀取失敗：" + error.message; return; }
-    if (!data?.length) { root.textContent = "目前還沒有雲端照片。"; return; }
-    for (const item of data) {
-      const row = document.createElement("div");
-      row.className = "upload";
-      const title = document.createElement("div");
-      title.textContent = (item.asset_kind === "generated" ? "AI 生成作品" : "原始照片") + " · " + new Date(item.created_at).toLocaleString("zh-TW");
-      const {data:signed} = await client.storage.from("outfit-private").createSignedUrl(item.storage_path,300);
-      row.appendChild(title);
-      if (signed?.signedUrl) {
-        const img = document.createElement("img");
-        img.src = signed.signedUrl; img.alt = "私人雲端照片"; img.className = "preview"; img.style.display = "block";
-        row.appendChild(img);
+    if (!session || session.user.email?.toLowerCase() !== OWNER) { roots.forEach(root => root.textContent = "登入後即可載入私人照片。"); return; }
+    const {data, error} = await client.from("outfit_assets")
+      .select("id,storage_path,asset_kind,mime_type,created_at,prompt_text,source_filename,model,quality")
+      .order("created_at",{ascending:false});
+    if (error) { roots.forEach(root => root.textContent = "讀取失敗：" + error.message); return; }
+    for (const root of roots) {
+      root.innerHTML = "";
+      const items = (data || []).filter(item => root.id !== "cloudGallery" || window.assetFilter === "all" || item.asset_kind === window.assetFilter);
+      if (!items.length) { root.textContent = "目前沒有符合條件的雲端作品。"; continue; }
+      for (const item of items) {
+        const card = document.createElement("div");
+        card.className = "upload";
+        card.style.textAlign = "left";
+        const heading = document.createElement("strong");
+        heading.textContent = (item.asset_kind === "generated" ? "✨ AI 生成作品" : "📷 原始照片");
+        card.appendChild(heading);
+        const meta = document.createElement("div");
+        meta.className = "small";
+        meta.textContent = new Date(item.created_at).toLocaleString("zh-TW") + (item.quality ? " · " + item.quality.toUpperCase() : "");
+        card.appendChild(meta);
+        const {data:signed,error:signedError} = await client.storage.from("outfit-private").createSignedUrl(item.storage_path,300);
+        if (signed?.signedUrl) {
+          const img = document.createElement("img");
+          img.src = signed.signedUrl; img.alt = heading.textContent; img.className = "preview"; img.style.display = "block";
+          card.appendChild(img);
+          const dl = document.createElement("a");
+          dl.href = signed.signedUrl; dl.download = item.asset_kind === "generated" ? "AI百變換裝作品.png" : (item.source_filename || "參考照片");
+          dl.className = "btn secondary"; dl.textContent = "下載圖片"; dl.style.display = "inline-block"; dl.style.marginTop = "8px";
+          card.appendChild(dl);
+        } else {
+          const err = document.createElement("div"); err.className = "small"; err.textContent = "預覽連結暫時無法建立：" + (signedError?.message || "未知錯誤"); card.appendChild(err);
+        }
+        if (item.source_filename) {
+          const filename = document.createElement("div"); filename.className = "small"; filename.textContent = "參考檔案：" + item.source_filename; card.appendChild(filename);
+        }
+        if (item.prompt_text) {
+          const details = document.createElement("details");
+          const summary = document.createElement("summary"); summary.textContent = "查看本次生成提示詞"; details.appendChild(summary);
+          const prompt = document.createElement("p"); prompt.className = "small"; prompt.style.whiteSpace = "pre-wrap"; prompt.textContent = item.prompt_text; details.appendChild(prompt);
+          const copy = document.createElement("button"); copy.className = "btn ghost"; copy.textContent = "複製提示詞";
+          copy.onclick = async () => { try { await navigator.clipboard.writeText(item.prompt_text); copy.textContent = "已複製"; } catch { copy.textContent = "複製失敗"; } };
+          details.appendChild(copy); card.appendChild(details);
+          const model = document.createElement("div"); model.className = "small"; model.textContent = "模型：" + (item.model || "未記錄"); card.appendChild(model);
+        }
+        const del = document.createElement("button");
+        del.className = "btn ghost"; del.textContent = "刪除作品"; del.style.marginTop = "8px";
+        del.onclick = async () => {
+          if (!confirm("確定刪除這筆雲端照片與作品紀錄？")) return;
+          del.disabled = true;
+          const {error:removeError} = await client.storage.from("outfit-private").remove([item.storage_path]);
+          if (removeError) { alert("刪除失敗：" + removeError.message); del.disabled = false; return; }
+          const {error:rowError} = await client.from("outfit_assets").delete().eq("id",item.id);
+          if (rowError) alert("圖片已刪除，但資料紀錄未能同步：" + rowError.message);
+          await loadPrivateAssets();
+        };
+        card.appendChild(del);
+        root.appendChild(card);
       }
-      const del = document.createElement("button");
-      del.className = "btn ghost"; del.textContent = "刪除照片";
-      del.onclick = async () => {
-        if (!confirm("確定刪除這張雲端照片？")) return;
-        del.disabled = true;
-        const {error:removeError} = await client.storage.from("outfit-private").remove([item.storage_path]);
-        if (removeError) { alert("刪除失敗：" + removeError.message); del.disabled = false; return; }
-        const {error:rowError} = await client.from("outfit_assets").delete().eq("id",item.id);
-        if (rowError) alert("照片已刪除，但資料紀錄未能同步：" + rowError.message);
-        await loadPrivateAssets();
-      };
-      row.appendChild(del);
-      root.appendChild(row);
     }
+    const galleryStatus = document.getElementById("galleryStatus");
+    if (galleryStatus) galleryStatus.textContent = "共 " + (data?.length || 0) + " 筆雲端照片與作品紀錄。";
   }
+  document.getElementById("assetFilters")?.addEventListener("click", event => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+    window.assetFilter = button.dataset.filter;
+    document.querySelectorAll("#assetFilters [data-filter]").forEach(node => node.classList.toggle("selected", node === button));
+    loadPrivateAssets();
+  });
   window.refreshPrivateAssets = loadPrivateAssets;
   document.getElementById("uploadSource")?.addEventListener("click", () => uploadPrivate(document.getElementById("photo").files[0],"sourceUploadStatus"));
   document.getElementById("uploadTry")?.addEventListener("click", () => uploadPrivate(document.getElementById("tryPhoto").files[0],"tryUploadStatus"));
